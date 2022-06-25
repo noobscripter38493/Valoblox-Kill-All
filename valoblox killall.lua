@@ -26,16 +26,20 @@ local nc; nc = hookmetamethod(game, "__namecall", function(self, ...)
     if self == _G.firebullet and ncm == "FireServer" then
         local args = {...}
         
-        for _, v in next, players.GetPlayers(players) do
-            if v.Team == plr.Team or v.Team.Name == "Observers" then continue end
-            
-            local enemy_head = v.Character and v.Character.FindFirstChild(v.Character, "Head")
-            if enemy_head then
-                args[9] = enemy_head
-                
-                break
+        coroutine.wrap(function()
+            while true do wait() 
+                for _, v in next, players.GetPlayers(players) do
+                    if v.Team == plr.Team or v.Team.Name == "Observers" then continue end
+                    
+                    local enemy_head = v.Character and v.Character.FindFirstChild(v.Character, "Head")
+                    if enemy_head then
+                        args[9] = enemy_head
+                        
+                        _G.firebullet.FireServer(_G.firebullet, unpack(args))
+                    end
+                end
             end
-        end
+        end)()
 
         return nc(self, unpack(args))
     end
